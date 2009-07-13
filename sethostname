@@ -1,0 +1,47 @@
+#!/bin/bash
+
+#--------------------------------------------------------------------
+# Set a computer's hostname.  OS X specific.
+#
+# Usage: sethostname <interface> </path/to/hostnames/file>
+#
+# The hostnames file must be a list of mac addresses and hostname
+# pairs, one per line, separated by whitespace. Run the script on
+# the computer whose hostname you want to change. The hostname 
+# cannot contain spaces.
+#
+# Configured for Leopard; chang path to networksetup Tiger or older.
+#--------------------------------------------------------------------
+
+usage() {
+    echo "Usage: # $0 <interface> </path/to/hostnames/file>" >&2
+}
+
+# Check usage.
+if [ $(whoami) != 'root' ]; then
+    echo "$(basename $0) must be run as root"
+    exit 1
+fi
+
+if [ $# != 2 ]; then
+    usage
+    exit 1
+fi
+
+if [ -f $2 ]; then
+    hostfile=$2
+else
+    echo "$2 is not a regular file"
+    exit 1
+fi
+
+# Find the hostname and apply it.
+iface=$1
+mac=$(ifconfig $iface | awk '/ether/ {print $2}')
+hostname=$(awk "/$mac/ {print \$2}" $hostfile)
+
+if [[ $hostname == "" ]]; then
+    echo "Problem getting hostname, check $hostfile" >&2
+else
+    scutil --set HostName $hostname
+    /usr/sbin/networksetup -setcomputername $hostname
