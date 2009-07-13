@@ -45,3 +45,4 @@ if [[ $hostname == "" ]]; then
 else
     scutil --set HostName $hostname
     /usr/sbin/networksetup -setcomputername $hostname
+fi
