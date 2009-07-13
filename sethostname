@@ -10,7 +10,7 @@
 # the computer whose hostname you want to change. The hostname 
 # cannot contain spaces.
 #
-# Configured for Leopard; chang path to networksetup Tiger or older.
+# Configured for Leopard; change path to networksetup Tiger or older.
 #--------------------------------------------------------------------
 
 usage() {
